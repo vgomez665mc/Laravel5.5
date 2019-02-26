@@ -52,7 +52,76 @@ Route::get('articulo/{id}/cliente',function($id){
     return \App\Articulo::find($id)->cliente->Nombre;
 });
 
+**************************************One To Many***********************************
 
+
+**********************************************Pasos**********************************************
+
+Paso1:colocar en el modelo de la tabla a referencia la siguiente funcion el nombre de la funcion es en plural
+
+public function comments()
+    {
+        return $this->hasMany('App\Comment');
+    }
+
+paso 2: para pobrar la relacion se aplica el siguiente codigo
+
+*************************************Many To Many***********************************
+
+
+**********************************************Pasos**********************************************
+
+
+Paso1: crear las tablas con sus modelos empleando el comando
+comando: php artisan make:model Perfil -m 
+
+Paso:2 en los archivos correspondientes crear los campos
+
+Paso3: Crear la tabla pivot que es creando el archivo migration usando el siguiente comando
+comando: php artisan make:migration create_cliente_perfils_table --create="cliente_perfil"
+
+mantener la convencion de iniciar con la palabra create, luego el nombre de la primera tabla segun
+el alfabaeto luego la segunda tabla y por ultimo table, en el create lo mismo primero la tabla por orden alfabetico y luego la otra
+
+
+Paso4: crear los campos clave_id de las tablas que refencian en el archivo migration pivot,igual
+colocar lo en orden alfabetico
+
+ public function up()
+    {
+        Schema::create('cliente_perfil', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer("cliente_id");
+            $table->integer("perfil_id");
+            $table->timestamps();
+        });
+    }
+
+Paso 5: luego de tener todos los datos agregados en las tablas aplicar lo cambios empleando el comando:
+comando: php artisan migrate
+
+paso 6: en el modelo cliente colocar lo siguiente de la otra tabla
+
+public function perfils()
+    {
+        return $this->belongsToMany('App\Perfil');
+    }
+
+la funcion debe tener el nombre de la otra tabla en plural, y en la ruta colocar el nombre del modelo de la otra tabla .
+
+Paso 7: probar que todo esta bien aplicando la siguiente ruta:
+
+Route::get('cliente/{id}/perfil',function($id){
+    $clientes = Cliente::find($id);
+
+    foreach ($clientes->perfils as $perfil) {
+        return $perfil->Nombre;
+        
+    }
+});
+
+
+en el foreach se coloca el nombre de la funcion que se declaro en en el modelo
 
 
 

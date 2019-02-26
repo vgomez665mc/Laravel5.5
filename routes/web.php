@@ -217,6 +217,25 @@ Route::get('articulo/{id}/cliente',function($id){
 	return \App\Articulo::find($id)->cliente->Nombre->Apellido;
 });
 
+//--------------------------------------------------prueba de ruta de One to Many--------------
+
+Route::get('articulos',function(){
+	$articulos = Cliente::find(1)->articulos->where("pais_origen","canada");
+
+	foreach ($articulos as $articulo) {
+	    echo $articulo->Nombre_Articulo ."<br/>";
+	}
+
+});
 
 
+//--------------------------------------------------prueba de ruta de Many to Many--------------
 
+Route::get('cliente/{id}/perfil',function($id){
+	$clientes = Cliente::find($id);
+
+	foreach ($clientes->perfils as $perfil) {
+		return $perfil->Nombre;
+    	
+	}
+});
